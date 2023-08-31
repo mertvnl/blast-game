@@ -1,45 +1,49 @@
+using Core.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConfettiPanel : MonoBehaviour
+namespace Core.UI
 {
-    private ParticleSystem[] particles;
-
-    private void Awake()
+    public class ConfettiPanel : MonoBehaviour
     {
-        particles = GetComponentsInChildren<ParticleSystem>();
-    }
+        private ParticleSystem[] particles;
 
-    private void OnEnable()
-    {
-        GameManager.Instance.OnLevelCompleted.AddListener(PlayConfetti);
-        LevelManager.Instance.OnLevelLoadingStarted.AddListener(StopConfetti);
-        LevelManager.Instance.OnLevelLoaded.AddListener(StopConfetti);
-    }
-
-    private void OnDisable()
-    {
-        GameManager.Instance.OnLevelCompleted.RemoveListener(PlayConfetti);
-        LevelManager.Instance.OnLevelLoadingStarted.RemoveListener(StopConfetti);
-        LevelManager.Instance.OnLevelLoaded.RemoveListener(StopConfetti);
-    }
-
-    private void PlayConfetti(bool success)
-    {
-        if (!success) return;
-
-        foreach (var p in particles)
+        private void Awake()
         {
-            p.Play();
+            particles = GetComponentsInChildren<ParticleSystem>();
         }
-    }
 
-    private void StopConfetti()
-    {
-        foreach (var p in particles)
+        private void OnEnable()
         {
-            p.Stop();
+            GameManager.Instance.OnLevelCompleted.AddListener(PlayConfetti);
+            LevelManager.Instance.OnLevelLoadingStarted.AddListener(StopConfetti);
+            LevelManager.Instance.OnLevelLoaded.AddListener(StopConfetti);
+        }
+
+        private void OnDisable()
+        {
+            GameManager.Instance.OnLevelCompleted.RemoveListener(PlayConfetti);
+            LevelManager.Instance.OnLevelLoadingStarted.RemoveListener(StopConfetti);
+            LevelManager.Instance.OnLevelLoaded.RemoveListener(StopConfetti);
+        }
+
+        private void PlayConfetti(bool success)
+        {
+            if (!success) return;
+
+            foreach (var p in particles)
+            {
+                p.Play();
+            }
+        }
+
+        private void StopConfetti()
+        {
+            foreach (var p in particles)
+            {
+                p.Stop();
+            }
         }
     }
 }

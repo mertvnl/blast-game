@@ -1,39 +1,41 @@
-using System.Collections;
-using System.Collections.Generic;
+using Core.Systems;
+using Core.Utilities;
 using Sirenix.OdinInspector;
-using UnityEngine;
 
-public class GameManager : Singleton<GameManager>
+namespace Core.Managers
 {
-    private bool isLevelCompleted;
-
-    public Event<bool> OnLevelCompleted = new Event<bool>();
-
-    private void OnEnable()
+    public class GameManager : Singleton<GameManager>
     {
-        LevelManager.Instance.OnLevelLoaded.AddListener(ResetLevelCompletionStatus);
-    }
+        private bool isLevelCompleted;
 
-    private void OnDisable()
-    {
-        LevelManager.Instance.OnLevelLoaded.RemoveListener(ResetLevelCompletionStatus);
-    }
+        public CustomEvent<bool> OnLevelCompleted = new();
 
-    [Button]
-    public void CompleteLevel(bool isSuccess)
-    {
-        if (isLevelCompleted) return;
+        private void OnEnable()
+        {
+            LevelManager.Instance.OnLevelLoaded.AddListener(ResetLevelCompletionStatus);
+        }
 
-        isLevelCompleted = true;
+        private void OnDisable()
+        {
+            LevelManager.Instance.OnLevelLoaded.RemoveListener(ResetLevelCompletionStatus);
+        }
 
-        OnLevelCompleted.Invoke(isSuccess);
-        LevelManager.Instance.FinishLevel();
-        if (isSuccess)
-            SaveManager.SetInt("FakeLevel", SaveManager.GetInt("FakeLevel", 1) + 1);
-    }
+        [Button]
+        public void CompleteLevel(bool isSuccess)
+        {
+            if (isLevelCompleted) return;
 
-    private void ResetLevelCompletionStatus()
-    {
-        isLevelCompleted = false;
+            isLevelCompleted = true;
+
+            OnLevelCompleted.Invoke(isSuccess);
+            LevelManager.Instance.FinishLevel();
+            if (isSuccess)
+                SaveManager.SetInt("FakeLevel", SaveManager.GetInt("FakeLevel", 1) + 1);
+        }
+
+        private void ResetLevelCompletionStatus()
+        {
+            isLevelCompleted = false;
+        }
     }
 }

@@ -1,8 +1,12 @@
+using Core.Systems;
 using System;
 
-public static class EventManager
+namespace Core.Managers
 {
-    //Put your events here.
+    public static class EventManager
+    {
+        //Put your events here.
 
-    public static readonly Event<int> IntegerEvent = new Event<int>();
+        public static readonly CustomEvent<int> IntegerEvent = new();
+    }
 }

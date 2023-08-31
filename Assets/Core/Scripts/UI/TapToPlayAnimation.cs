@@ -1,12 +1,13 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TapToPlayAnimation : MonoBehaviour
+namespace Core.UI
 {
-    private void Awake()
+    public class TapToPlayAnimation : MonoBehaviour
     {
-        transform.DOPunchScale(Vector2.one * 0.1f, 1f, 1, 1).SetLoops(-1);
+        private void Awake()
+        {
+            transform.DOPunchScale(Vector2.one * 0.1f, 1f, 1, 1).SetLoops(-1);
+        }
     }
 }

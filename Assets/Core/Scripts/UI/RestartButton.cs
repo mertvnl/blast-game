@@ -1,25 +1,29 @@
+using Core.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RestartButton : MonoBehaviour
+namespace Core.UI
 {
-    private Button button;
-    public Button Button { get { return button == null ? button = GetComponent<Button>() : button; } }
-
-    private void OnEnable()
+    public class RestartButton : MonoBehaviour
     {
-        Button.onClick.AddListener(RestartLevel);
-    }
+        private Button button;
+        public Button Button { get { return button == null ? button = GetComponent<Button>() : button; } }
 
-    private void OnDisable()
-    {
-        Button.onClick.RemoveListener(RestartLevel);
-    }
+        private void OnEnable()
+        {
+            Button.onClick.AddListener(RestartLevel);
+        }
 
-    private void RestartLevel()
-    {
-        LevelManager.Instance.RestartLevel();
+        private void OnDisable()
+        {
+            Button.onClick.RemoveListener(RestartLevel);
+        }
+
+        private void RestartLevel()
+        {
+            LevelManager.Instance.RestartLevel();
+        }
     }
 }

@@ -1,18 +1,22 @@
+using Core.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InGamePanel : EasyPanel
+namespace Core.UI
 {
-    private void OnEnable()
+    public class InGamePanel : EasyPanel
     {
-        LevelManager.Instance.OnLevelStarted.AddListener(ShowPanelAnimated);
-        LevelManager.Instance.OnLevelLoaded.AddListener(HidePanel);
-    }
+        private void OnEnable()
+        {
+            LevelManager.Instance.OnLevelStarted.AddListener(ShowPanelAnimated);
+            LevelManager.Instance.OnLevelLoaded.AddListener(HidePanel);
+        }
 
-    private void OnDisable()
-    {
-        LevelManager.Instance.OnLevelStarted.RemoveListener(ShowPanelAnimated);
-        LevelManager.Instance.OnLevelLoaded.RemoveListener(HidePanel);
+        private void OnDisable()
+        {
+            LevelManager.Instance.OnLevelStarted.RemoveListener(ShowPanelAnimated);
+            LevelManager.Instance.OnLevelLoaded.RemoveListener(HidePanel);
+        }
     }
 }

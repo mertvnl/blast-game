@@ -11,76 +11,80 @@ public enum PanelAnimationTypes
     Scale,
 }
 
-[RequireComponent(typeof(CanvasGroup))]
-public class EasyPanel : MonoBehaviour
+namespace Core.UI
 {
-    #region Getters
-    private CanvasGroup canvasGroup;
-    public CanvasGroup CanvasGroup { get { return canvasGroup == null ? canvasGroup = GetComponent<CanvasGroup>() : canvasGroup; } }
-    #endregion
-
-    [SerializeField] private PanelAnimationTypes panelAnimationTypes;
-
-    [Button]
-    public virtual void ShowPanel()
+    [RequireComponent(typeof(CanvasGroup))]
+    public class EasyPanel : MonoBehaviour
     {
-        CanvasGroup.alpha = 1;
-        CanvasGroup.blocksRaycasts = true;
-        CanvasGroup.interactable = true;
-    }
+        #region Getters
+        private CanvasGroup canvasGroup;
+        public CanvasGroup CanvasGroup { get { return canvasGroup == null ? canvasGroup = GetComponent<CanvasGroup>() : canvasGroup; } }
+        #endregion
 
-    [Button]
-    public virtual void ShowPanelAnimated()
-    {
-        switch (panelAnimationTypes)
+        [SerializeField] private PanelAnimationTypes panelAnimationTypes;
+
+        [Button]
+        public virtual void ShowPanel()
         {
-            case PanelAnimationTypes.Fade:
-                FadePanel(1, 0.5f, ShowPanel);
-                break;
-            case PanelAnimationTypes.Scale:
-                ScalePanel(true, 0.5f);
-                break;
+            CanvasGroup.alpha = 1;
+            CanvasGroup.blocksRaycasts = true;
+            CanvasGroup.interactable = true;
         }
-    }
 
-    [Button]
-    public virtual void HidePanel()
-    {
-        CanvasGroup.alpha = 0;
-        CanvasGroup.blocksRaycasts = false;
-        CanvasGroup.interactable = false;
-    }
-
-    [Button]
-    public virtual void HidePanelAnimated()
-    {
-        switch (panelAnimationTypes)
+        [Button]
+        public virtual void ShowPanelAnimated()
         {
-            case PanelAnimationTypes.Fade:
-                FadePanel(0, 0.5f, HidePanel);
-                break;
-            case PanelAnimationTypes.Scale:
-                ScalePanel(false, 0.5f);
-                break;
+            switch (panelAnimationTypes)
+            {
+                case PanelAnimationTypes.Fade:
+                    FadePanel(1, 0.5f, ShowPanel);
+                    break;
+                case PanelAnimationTypes.Scale:
+                    ScalePanel(true, 0.5f);
+                    break;
+            }
         }
-    }
 
-    private void FadePanel(float value, float duration, Action onComplete = null)
-    {
-        CanvasGroup.DOFade(value, duration).OnComplete(()=> onComplete());
-    }
-
-    private void ScalePanel(bool isShow, float duration)
-    {
-        if (isShow)
+        [Button]
+        public virtual void HidePanel()
         {
-            transform.localScale = Vector3.zero;
-
-            transform.DOScale(Vector3.one, duration).OnStart(ShowPanel);
+            CanvasGroup.alpha = 0;
+            CanvasGroup.blocksRaycasts = false;
+            CanvasGroup.interactable = false;
         }
-        else
+
+        [Button]
+        public virtual void HidePanelAnimated()
         {
-            transform.DOScale(Vector3.zero, duration).OnComplete(()=> { HidePanel(); transform.localScale = Vector3.one; });
+            switch (panelAnimationTypes)
+            {
+                case PanelAnimationTypes.Fade:
+                    FadePanel(0, 0.5f, HidePanel);
+                    break;
+                case PanelAnimationTypes.Scale:
+                    ScalePanel(false, 0.5f);
+                    break;
+            }
+        }
+
+        private void FadePanel(float value, float duration, Action onComplete = null)
+        {
+            CanvasGroup.DOFade(value, duration).OnComplete(()=> onComplete());
+        }
+
+        private void ScalePanel(bool isShow, float duration)
+        {
+            if (isShow)
+            {
+                transform.localScale = Vector3.zero;
+
+                transform.DOScale(Vector3.one, duration).OnStart(ShowPanel);
+            }
+            else
+            {
+                transform.DOScale(Vector3.zero, duration).OnComplete(()=> { HidePanel(); transform.localScale = Vector3.one; });
+            }
         }
     }
 }
+

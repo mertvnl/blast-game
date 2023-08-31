@@ -1,24 +1,28 @@
+using Core.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class LevelTextController : MonoBehaviour
+namespace Core.UI
 {
-    private TextMeshProUGUI text;
-    public TextMeshProUGUI Text { get { return text == null ? text = GetComponent<TextMeshProUGUI>() : text; } }
-    private void OnEnable()
+    public class LevelTextController : MonoBehaviour
     {
-        LevelManager.Instance.OnLevelLoaded.AddListener(UpdateLevelText);
-    }
+        private TextMeshProUGUI text;
+        public TextMeshProUGUI Text { get { return text == null ? text = GetComponent<TextMeshProUGUI>() : text; } }
+        private void OnEnable()
+        {
+            LevelManager.Instance.OnLevelLoaded.AddListener(UpdateLevelText);
+        }
 
-    private void OnDisable()
-    {
-        LevelManager.Instance.OnLevelLoaded.RemoveListener(UpdateLevelText);
-    }
+        private void OnDisable()
+        {
+            LevelManager.Instance.OnLevelLoaded.RemoveListener(UpdateLevelText);
+        }
 
-    private void UpdateLevelText()
-    {
-        Text.SetText("Level " + SaveManager.GetInt("FakeLevel", 1));
+        private void UpdateLevelText()
+        {
+            Text.SetText("Level " + SaveManager.GetInt("FakeLevel", 1));
+        }
     }
 }
