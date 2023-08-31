@@ -1,0 +1,16 @@
+{
+    "name": "BlastGame.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f4c8c7305cdddfe4799a439dd8ef7c2a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
