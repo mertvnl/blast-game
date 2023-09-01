@@ -56,5 +56,23 @@ namespace BlastGame.Runtime
 
             return null;
         }
+
+        public GridTile GetLowestEmptyTileAtRow(int x)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                GridTile tile = GetTileAtPosition(new Vector2(x, y));
+
+                if (tile == null)
+                    continue;
+
+                if (!tile.IsEmpty)
+                    continue;
+
+                return tile;
+            }
+
+            return null;
+        }
     }
 }
