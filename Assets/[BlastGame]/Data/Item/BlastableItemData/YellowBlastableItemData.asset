@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60eff3f8120958c44bcc0ea77d671afe, type: 3}
+  m_Name: YellowBlastableItemData
+  m_EditorClassIdentifier: 
+  <DefaultSprite>k__BackingField: {fileID: 21300000, guid: 6fcdbad11b31aed418ef0e033fd6271e, type: 3}
+  <BlastableVisualDictionary>k__BackingField:
+    m_keys: 0a000000140000001e000000
+    m_values:
+    - {fileID: 21300000, guid: c55e549a6545b4447bdcb17cf298a730, type: 3}
+    - {fileID: 21300000, guid: ba7c9d52384fc7149a8afb087bdfe07a, type: 3}
+    - {fileID: 21300000, guid: 21a8fe8fbcafc6f43835142caf4c0fe9, type: 3}
