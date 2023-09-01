@@ -12,7 +12,7 @@ namespace BlastGame.Runtime
         private int _y;
         public int Y => _y;
 
-        public bool IsEmpty => CurrentItem != null;
+        public bool IsEmpty => CurrentItem == null;
 
         public IItem CurrentItem { get; private set; }
 
