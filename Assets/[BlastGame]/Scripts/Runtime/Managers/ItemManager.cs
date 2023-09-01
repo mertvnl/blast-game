@@ -1,10 +1,12 @@
 using BlastGame.Interface;
 using BlastGame.Runtime.Models;
+using Core.Systems;
 using Core.Utilities;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace BlastGame.Runtime
@@ -13,6 +15,9 @@ namespace BlastGame.Runtime
     {
         [SerializeField] private BlastableItem blastableItem;
         [SerializeField] private List<ItemData> itemDatabase = new();
+
+        public List<IItem> Items { get; private set; } = new();
+        public CustomEvent<List<IItem>> OnItemsBlasted = new();
 
         private const float SPAWN_OFFSET_Y = 1f;
         private readonly Vector2[] ADJACENT_CHECK_POSITIONS = { Vector2.up , Vector2.down, Vector2.left, Vector2.right };
@@ -44,20 +49,72 @@ namespace BlastGame.Runtime
             }
         }
 
-        public bool IsAdjacentCorresponding(IItem item)
+        public void AddItem(IItem item)
+        {
+            if (Items.Contains(item))
+                return;
+
+            Items.Add(item);
+        }
+
+        public void RemoveItem(IItem item)
+        {
+            if (!Items.Contains(item))
+                return;
+
+            Items.Remove(item);
+        }
+
+        public bool IsAdjacentMatching(IItem item)
         {
             return GetMatchedAdjacentItems(item).Count > 0;
         }
 
-        public void NotifyAdjacents(IItem item)
+        public void BlastAllMatches(IItem item)
         {
-            List<IItem> blastables = GetAdjacentsItems(item);
+            List<IItem> itemsToBlast = GetAllMatchedAdjacentItems(item);
 
-            if (blastables.Count < 0)
+            if (itemsToBlast.Any(x => !x.CanBlast))
                 return;
 
-            foreach (IBlastable blastable in blastables)
-                blastable.Notify(item);
+            foreach (IBlastable blastable in itemsToBlast)
+                blastable.Blast();
+
+            MoveItemsToEmptyTiles();
+
+
+
+            OnItemsBlasted.Invoke(itemsToBlast);
+        }
+
+        private void MoveItemsToEmptyTiles()
+        {
+            List<IItem> items = new(Items);
+
+            foreach (IItem item in items)
+            {
+                Vector2 positionToCheck = item.CurrentGridTile.GetPosition() + Vector2.down;
+
+                GridTile tileAtBelow = GridManager.Instance.GetTileAtPosition(positionToCheck);
+
+                if (tileAtBelow == null)
+                    continue;
+
+                if (!tileAtBelow.IsEmpty)
+                    continue;
+
+                GridTile lowestTile = GridManager.Instance.GetLowestEmptyTileAtRow((int)positionToCheck.x);
+
+                if (lowestTile == null)
+                    continue;
+
+                item.Move(lowestTile.GetPosition());
+            }
+        }
+
+        private void RefillTilesWithItems()
+        {
+
         }
 
         private List<IItem> GetMatchedAdjacentItems(IItem item)
@@ -83,26 +140,30 @@ namespace BlastGame.Runtime
             return matchedAdjacents;
         }
 
-        private List<IItem> GetAdjacentsItems(IItem item)
+        private List<IItem> GetAllMatchedAdjacentItems(IItem item)
         {
-            List<IItem> adjacents = new();
+            List<IItem> allMatchedAdjacentItems = new() { item };
 
-            foreach (Vector2 adjacentPosition in ADJACENT_CHECK_POSITIONS)
+            GetAllMatchedAdjacentItems(item, ref allMatchedAdjacentItems);
+
+            return allMatchedAdjacentItems;
+        }
+
+        private void GetAllMatchedAdjacentItems(IItem item, ref List<IItem> adjacents)
+        {
+            List<IItem> currentMatchedAdjacents = GetMatchedAdjacentItems(item);
+
+            if (currentMatchedAdjacents.Count == 0)
+                return;
+
+            foreach (var adjacentItem in currentMatchedAdjacents)
             {
-                GridTile tile = GridManager.Instance.GetTileAtPosition(item.CurrentGridTile.GetPosition() + adjacentPosition);
-
-                if (tile == null)
+                if (adjacents.Contains(adjacentItem))
                     continue;
 
-                IItem adjacentItemToCheck = tile.CurrentItem;
-
-                if (adjacentItemToCheck == null)
-                    continue;
-
-                adjacents.Add(adjacentItemToCheck);
+                adjacents.Add(adjacentItem);
+                GetAllMatchedAdjacentItems(adjacentItem, ref adjacents);
             }
-
-            return adjacents;
         }
     }
 }

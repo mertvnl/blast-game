@@ -6,7 +6,7 @@ namespace BlastGame.Interface
 {
     public interface IBlastable
     {
+        bool CanBlast { get; }
         void Blast();
-        void Notify(IItem item);
     }
 }

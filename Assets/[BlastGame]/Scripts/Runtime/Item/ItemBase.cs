@@ -13,30 +13,45 @@ namespace BlastGame.Runtime
         public ItemData ItemData { get; set; }
         public GridTile CurrentGridTile { get; set; }
         public CustomEvent<ItemData> OnItemDataInitialized { get; set; } = new();
+        public bool CanBlast { get; private set; }
 
         private const Ease MOVEMENT_EASE = Ease.OutBack;
         private const float MOVEMENT_DURATION = 0.5f;
 
-        public abstract void Blast();
-        public abstract void Notify(IItem item);
-
-
         public virtual void Initialize(ItemData itemData, GridTile gridTile)
         {
+            ItemManager.Instance.AddItem(this);
             ItemData = itemData;
-            CurrentGridTile = gridTile;
+            Move(gridTile.GetPosition());
             OnItemDataInitialized.Invoke(itemData);
-            Move(gridTile.GetPosition().y);
         }
 
-        public void Move(float targetPositionY)
+        public virtual void Blast()
         {
-            transform.DOMoveY(targetPositionY, MOVEMENT_DURATION).SetEase(MOVEMENT_EASE).OnComplete(OnMovementCompleted);
+            ItemManager.Instance.RemoveItem(this);
+            CurrentGridTile.SetItem(null);
+            Destroy(gameObject);
+        }
+
+        public virtual void Move(Vector2 targetPosition)
+        {
+            UpdateGridTile(GridManager.Instance.GetTileAtPosition(targetPosition));
+            CanBlast = false;
+            transform.DOMove(targetPosition, MOVEMENT_DURATION).SetEase(MOVEMENT_EASE).OnComplete(OnMovementCompleted);
 
             void OnMovementCompleted()
             {
-                CurrentGridTile.SetItem(this);
+                CanBlast = true;
             }
+        }
+
+        public void UpdateGridTile(GridTile newTile)
+        {
+            if (CurrentGridTile != null)
+                CurrentGridTile.SetItem(null);
+
+            CurrentGridTile = newTile;
+            CurrentGridTile.SetItem(this);
         }
     }
 }

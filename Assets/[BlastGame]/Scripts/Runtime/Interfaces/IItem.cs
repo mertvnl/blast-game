@@ -14,5 +14,6 @@ namespace BlastGame.Interface
         CustomEvent<ItemData> OnItemDataInitialized { get; set; }
 
         void Initialize(ItemData itemData, GridTile gridTile);
+        void UpdateGridTile(GridTile newTile);
     }
 }

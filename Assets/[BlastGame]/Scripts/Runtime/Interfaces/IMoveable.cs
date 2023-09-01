@@ -9,6 +9,6 @@ namespace BlastGame.Interface
 {
     public interface IMoveable : IComponent
     {
-        void Move(float targetPositionY);
+        void Move(Vector2 targetPosition);
     }
 }

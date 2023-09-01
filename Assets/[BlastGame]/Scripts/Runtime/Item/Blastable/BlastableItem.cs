@@ -9,22 +9,6 @@ namespace BlastGame.Runtime
 {
     public class BlastableItem : ItemBase
     {
-        public override void Blast()
-        {
-            ItemManager.Instance.NotifyAdjacents(this);
-            Destroy(gameObject);
-        }
-
-        public override void Notify(IItem item)
-        {
-            if (item == null)
-                return;
-
-            if (item.ItemData != ItemData)
-                return;
-
-            Blast();
-        }
 
         private void OnMouseDown()
         {
@@ -33,13 +17,12 @@ namespace BlastGame.Runtime
 
         private void CheckIfCanBlast()
         {
-            if (!ItemManager.Instance.IsAdjacentCorresponding(this))
+            if (!ItemManager.Instance.IsAdjacentMatching(this))
             {
-
                 return;
             }
 
-            Blast();
+            ItemManager.Instance.BlastAllMatches(this);
         }
     }
 }
