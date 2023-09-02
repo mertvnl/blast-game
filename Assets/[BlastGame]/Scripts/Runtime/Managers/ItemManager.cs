@@ -43,10 +43,16 @@ namespace BlastGame.Runtime
                     if (tile == null)
                         continue;
 
-                    BlastableItem blastable = Instantiate(blastableItem, new Vector3(x, height + SPAWN_OFFSET_Y), Quaternion.identity);
-                    blastable.Initialize(itemDatabase.GetRandom(), tile);
+                    CreateItem(tile);
                 }
             }
+        }
+
+        private void CreateItem(GridTile tile)
+        {
+            Vector2 spawnPosition = new(tile.GetPosition().x, GridManager.Instance.GetGridSize().y + SPAWN_OFFSET_Y);
+            BlastableItem blastable = Instantiate(blastableItem, spawnPosition, Quaternion.identity);
+            blastable.Initialize(itemDatabase.GetRandom(), tile);
         }
 
         public void AddItem(IItem item)
@@ -82,18 +88,19 @@ namespace BlastGame.Runtime
 
             MoveItemsToEmptyTiles();
 
-
+            RefillTilesWithItems();
 
             OnItemsBlasted.Invoke(itemsToBlast);
         }
 
+        [Button]
         private void MoveItemsToEmptyTiles()
         {
-            List<IItem> items = new(Items);
+            List<GridTile> tiles = GridManager.Instance.GetTilesWithItem();
 
-            foreach (IItem item in items)
+            foreach (GridTile tile in tiles)
             {
-                Vector2 positionToCheck = item.CurrentGridTile.GetPosition() + Vector2.down;
+                Vector2 positionToCheck = tile.GetPosition() + Vector2.down;
 
                 GridTile tileAtBelow = GridManager.Instance.GetTileAtPosition(positionToCheck);
 
@@ -108,13 +115,16 @@ namespace BlastGame.Runtime
                 if (lowestTile == null)
                     continue;
 
-                item.Move(lowestTile.GetPosition());
+                tile.CurrentItem.Move(lowestTile.GetPosition());
             }
         }
 
         private void RefillTilesWithItems()
         {
+            List<GridTile> emptyTiles = GridManager.Instance.GetEmptyTiles();
 
+            foreach (GridTile emptyTile in emptyTiles)
+                CreateItem(emptyTile);
         }
 
         private List<IItem> GetMatchedAdjacentItems(IItem item)
