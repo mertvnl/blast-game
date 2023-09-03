@@ -31,4 +31,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 30db0b63b8fd8a0448c6c3b8186cdb3e, type: 2}
   ObstacleItemDatabase:
   - {fileID: 11400000, guid: ccccd34cc76cb5b43b8abd087b240e40, type: 2}
-  RequiredScore: 10000
+  RequiredScore: 8000
+  MoveCount: 25
