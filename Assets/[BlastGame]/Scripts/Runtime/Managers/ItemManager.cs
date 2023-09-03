@@ -13,7 +13,6 @@ namespace BlastGame.Runtime
 {
     public class ItemManager : Singleton<ItemManager>
     {
-        [SerializeField] private BlastableItem blastableItem;
         [SerializeField] private List<ItemData> itemDatabase = new();
 
         public List<IItem> Items { get; private set; } = new();
@@ -48,11 +47,18 @@ namespace BlastGame.Runtime
             }
         }
 
-        private void CreateItem(GridTile tile)
+        private void CreateItem(GridTile tile, bool allowObstacles = true)
         {
-            Vector2 spawnPosition = new(tile.GetPosition().x, GridManager.Instance.GetGridSize().y + SPAWN_OFFSET_Y);
-            BlastableItem blastable = Instantiate(blastableItem, spawnPosition, Quaternion.identity);
-            blastable.Initialize(itemDatabase.GetRandom(), tile);
+            List<ItemData> itemDatas = new(itemDatabase);
+            
+            if (!allowObstacles)
+                itemDatas.RemoveAll(data => data is ObstacleItemData);
+
+            ItemData itemData = itemDatas.GetRandom();
+
+            Vector2 spawnPosition = new(tile.GetGridPosition().x, GridManager.Instance.GetGridSize().y + SPAWN_OFFSET_Y);
+            IItem item = Instantiate(itemData.ItemPrefab, spawnPosition, Quaternion.identity);
+            item.Initialize(itemData, tile);
         }
 
         public void AddItem(IItem item)
@@ -76,6 +82,20 @@ namespace BlastGame.Runtime
             return GetMatchedAdjacentItems(item).Count > 0;
         }
 
+        public bool IsAdjacent(IItem targetItem, List<IItem> itemsToCheck)
+        {
+            foreach (IItem item in itemsToCheck)
+            {
+                foreach (Vector2 adjacentPosition in ADJACENT_CHECK_POSITIONS)
+                {
+                    if(item.CurrentGridTile.GetGridPosition() == targetItem.CurrentGridTile.GetGridPosition() + adjacentPosition)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
         public void BlastAllMatches(IItem item)
         {
             List<IItem> itemsToBlast = GetAllMatchedAdjacentItems(item);
@@ -86,21 +106,25 @@ namespace BlastGame.Runtime
             foreach (IBlastable blastable in itemsToBlast)
                 blastable.Blast();
 
-            MoveItemsToEmptyTiles();
-
-            RefillTilesWithItems();
+            UpdateGridItems();
 
             OnItemsBlasted.Invoke(itemsToBlast);
         }
 
         [Button]
+        public void UpdateGridItems()
+        {
+            MoveItemsToEmptyTiles();
+            RefillTilesWithItems();
+        }
+
         private void MoveItemsToEmptyTiles()
         {
             List<GridTile> tiles = GridManager.Instance.GetTilesWithItem();
 
             foreach (GridTile tile in tiles)
             {
-                Vector2 positionToCheck = tile.GetPosition() + Vector2.down;
+                Vector2 positionToCheck = tile.GetGridPosition() + Vector2.down;
 
                 GridTile tileAtBelow = GridManager.Instance.GetTileAtPosition(positionToCheck);
 
@@ -115,16 +139,16 @@ namespace BlastGame.Runtime
                 if (lowestTile == null)
                     continue;
 
-                tile.CurrentItem.Move(lowestTile.GetPosition());
+                tile.CurrentItem.Move(lowestTile.GetGridPosition());
             }
         }
 
         private void RefillTilesWithItems()
         {
-            List<GridTile> emptyTiles = GridManager.Instance.GetEmptyTiles();
+            List<GridTile> emptyTiles = GridManager.Instance.GetFillableTiles();
 
             foreach (GridTile emptyTile in emptyTiles)
-                CreateItem(emptyTile);
+                CreateItem(emptyTile, false);
         }
 
         private List<IItem> GetMatchedAdjacentItems(IItem item)
@@ -133,7 +157,7 @@ namespace BlastGame.Runtime
 
             foreach (Vector2 adjacentPosition in ADJACENT_CHECK_POSITIONS)
             {
-                GridTile tile = GridManager.Instance.GetTileAtPosition(item.CurrentGridTile.GetPosition() + adjacentPosition);
+                GridTile tile = GridManager.Instance.GetTileAtPosition(item.CurrentGridTile.GetGridPosition() + adjacentPosition);
 
                 if (tile == null)
                     continue;

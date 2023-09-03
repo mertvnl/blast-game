@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60eff3f8120958c44bcc0ea77d671afe, type: 3}
   m_Name: PinkBlastableItemData
   m_EditorClassIdentifier: 
+  <ItemPrefab>k__BackingField: {fileID: 1148212562131280963, guid: e42cb0b0d95a3df48925138129ac57a2, type: 3}
   <DefaultSprite>k__BackingField: {fileID: 21300000, guid: e8bc3251953c0d14086d1cda99ce3d30, type: 3}
   <BlastableVisualDictionary>k__BackingField:
     m_keys: 0a000000140000001e000000

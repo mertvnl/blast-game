@@ -59,7 +59,28 @@ namespace BlastGame.Runtime
 
         public GridTile GetLowestEmptyTileAtRow(int x)
         {
-            for (int y = 0; y < height; y++)
+            int startHeight = 0;
+
+            for (int y = height - 1; y >= height; y--)
+            {
+                GridTile tile = GetTileAtPosition(new Vector2(x, y));
+
+                if (tile == null)
+                    continue;
+
+                if (!tile.IsEmpty && !tile.CurrentItem.CanMove)
+                {
+                    Debug.Log(y + " " + (int)tile.GetGridPosition().y);
+
+                    startHeight = (int)tile.GetGridPosition().y;
+                    break;
+                }
+
+                if (tile.IsEmpty)
+                    continue;
+            }
+
+            for (int y = startHeight; y < height; y++)
             {
                 GridTile tile = GetTileAtPosition(new Vector2(x, y));
 
@@ -75,15 +96,18 @@ namespace BlastGame.Runtime
             return null;
         }
 
-        public List<GridTile> GetEmptyTiles()
+        public List<GridTile> GetFillableTiles()
         {
             List<GridTile> emptyTiles = new();
 
-            for (int x = width - 1; x >= 0; x--)
+            for (int x = 0; x < width; x++)
             {
                 for (int y = height - 1; y >= 0; y--)
                 {
                     GridTile tile = GetTileAtPosition(new Vector2(x, y));
+
+                    if (!tile.IsEmpty && !tile.CurrentItem.CanMove)
+                        break;
 
                     if (!tile.IsEmpty)
                         continue;

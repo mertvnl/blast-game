@@ -29,7 +29,7 @@ namespace BlastGame.Runtime
             CurrentItem = item;
         }
 
-        public Vector2 GetPosition()
+        public Vector2 GetGridPosition()
         {
             return new Vector2(_x, _y);
         }

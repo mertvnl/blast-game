@@ -9,11 +9,12 @@ namespace BlastGame.Interface
 {
     public interface IItem : IBlastable, IMoveable
     {
-        ItemData ItemData { get; set; }
-        GridTile CurrentGridTile { get; set; }
-        CustomEvent<ItemData> OnItemDataInitialized { get; set; }
+        ItemData ItemData { get; }
+        GridTile CurrentGridTile { get; }
+        CustomEvent<ItemData> OnItemDataInitialized { get; }
 
         void Initialize(ItemData itemData, GridTile gridTile);
         void UpdateGridTile(GridTile newTile);
+        void Dispose();
     }
 }
