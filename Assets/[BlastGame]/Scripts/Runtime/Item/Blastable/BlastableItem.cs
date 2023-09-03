@@ -1,6 +1,7 @@
 using BlastGame.Interface;
 using BlastGame.Runtime;
 using BlastGame.Runtime.Models;
+using Core.Managers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,12 +21,16 @@ namespace BlastGame.Runtime
 
         private void CheckIfCanBlast()
         {
+            if (!LevelManager.Instance.IsLevelStarted)
+                return;
+
             if (!ItemManager.Instance.IsAdjacentMatching(this))
             {
                 return;
             }
 
             ItemManager.Instance.BlastAllMatches(this);
+            MovesManager.Instance.DecreaseMoveCount();
         }
 
         public override void Initialize(ItemData itemData, GridTile gridTile)

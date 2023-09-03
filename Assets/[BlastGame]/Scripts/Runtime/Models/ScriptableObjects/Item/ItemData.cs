@@ -8,5 +8,6 @@ namespace BlastGame.Runtime.Models
     {
         [field: SerializeField] public ItemBase ItemPrefab { get; private set; }
         [field: SerializeField] public Sprite DefaultSprite { get; private set; }
+        [field: SerializeField] public int ScoreAmount { get; private set; }
     }
 }

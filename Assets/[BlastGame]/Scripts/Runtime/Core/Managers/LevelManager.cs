@@ -24,8 +24,9 @@ namespace Core.Managers
 
         public bool IsLevelStarted { get; set; }
 
-        private int currentLevelIndex;
-        private bool isLevelLoading;
+        private int _currentLevelIndex;
+        private bool _isLevelLoading;
+        private bool _canStartLevel;
 
         public CustomEvent OnLevelLoadingStarted = new();
         public CustomEvent OnLevelLoaded = new();
@@ -36,6 +37,9 @@ namespace Core.Managers
         {
             if (IsLevelStarted) return;
 
+            if (!_canStartLevel) return;
+
+            _canStartLevel = false;
             IsLevelStarted = true;
             OnLevelStarted.Invoke();
         }
@@ -50,7 +54,7 @@ namespace Core.Managers
 
         private void LoadLevel(int levelIndex)
         {
-            if (isLevelLoading) return;
+            if (_isLevelLoading) return;
 
             StartCoroutine(LoadLevelCo(levelIndex));
         }
@@ -58,17 +62,18 @@ namespace Core.Managers
         private IEnumerator LoadLevelCo(int levelIndex)
         {
             IsLevelStarted = false;
-            isLevelLoading = true;
+            _isLevelLoading = true;
             OnLevelLoadingStarted.Invoke();
             yield return new WaitForSeconds(1f);
             Level targetLevel = levelDatabase.GetLevelByIndex(levelIndex);
             yield return SceneManager.LoadSceneAsync(targetLevel.LevelId);
             yield return new WaitForSeconds(0.5f);
-            currentLevelIndex = levelIndex;
-            SaveManager.SetInt("LastLevelIndex", currentLevelIndex);
+            _currentLevelIndex = levelIndex;
+            SaveManager.SetInt("LastLevelIndex", _currentLevelIndex);
             CurrentLevel = targetLevel;
             OnLevelLoaded.Invoke();
-            isLevelLoading = false;
+            _isLevelLoading = false;
+            _canStartLevel = true;
         }
 
         public void LoadLastLevel()
@@ -79,7 +84,7 @@ namespace Core.Managers
         [Button]
         public void LoadNextLevel()
         {
-            int nextLevelIndex = currentLevelIndex + 1;
+            int nextLevelIndex = _currentLevelIndex + 1;
 
             if (nextLevelIndex > GetLevelCount())
                 LoadLevel(0);
@@ -90,7 +95,7 @@ namespace Core.Managers
         [Button]
         public void LoadPreviousLevel()
         {
-            int previousLevelIndex = currentLevelIndex - 1;
+            int previousLevelIndex = _currentLevelIndex - 1;
 
             if (previousLevelIndex < 0)
                 LoadLevel(0);
@@ -101,14 +106,15 @@ namespace Core.Managers
         [Button]
         public void RestartLevel()
         {
-            LoadLevel(currentLevelIndex);
+            LoadLevel(_currentLevelIndex);
         }
 
         public void LoadCurrentEditorLevel()
         {
-            currentLevelIndex = levelDatabase.GetLevelIndexById(SceneManager.GetActiveScene().name);
-            CurrentLevel = levelDatabase.GetLevelByIndex(currentLevelIndex);
+            _currentLevelIndex = levelDatabase.GetLevelIndexById(SceneManager.GetActiveScene().name);
+            CurrentLevel = levelDatabase.GetLevelByIndex(_currentLevelIndex);
             OnLevelLoaded.Invoke();
+            _canStartLevel = true;
         }
 
         public int GetLevelCount()

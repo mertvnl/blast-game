@@ -59,6 +59,7 @@ namespace BlastGame.Runtime
 
         public virtual void Dispose()
         {
+            ScoreManager.Instance.AddScore(ItemData.ScoreAmount);
             CurrentGridTile.SetItem(null);
             Destroy(gameObject);
         }
