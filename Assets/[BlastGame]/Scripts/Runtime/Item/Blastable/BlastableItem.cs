@@ -10,6 +10,9 @@ namespace BlastGame.Runtime
 {
     public class BlastableItem : ItemBase
     {
+        private SpriteRenderer _spriteRenderer;
+        public SpriteRenderer SpriteRenderer => _spriteRenderer == null ? _spriteRenderer = GetComponentInChildren<SpriteRenderer>() : _spriteRenderer;
+
         private void OnMouseDown()
         {
             CheckIfCanBlast();
@@ -60,6 +63,12 @@ namespace BlastGame.Runtime
         {
             ItemManager.Instance.RemoveItem(this);
             base.Dispose();
+        }
+
+        public override void SetBlastableGroup(BlastableVisualType visualType)
+        {
+            BlastableItemData data = ItemData as BlastableItemData;
+            SpriteRenderer.sprite = data.GetSpriteByType(visualType);
         }
     }
 }

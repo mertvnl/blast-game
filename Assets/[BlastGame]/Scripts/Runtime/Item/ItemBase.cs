@@ -62,5 +62,7 @@ namespace BlastGame.Runtime
             CurrentGridTile.SetItem(null);
             Destroy(gameObject);
         }
+
+        public virtual void SetBlastableGroup(BlastableVisualType visualType) { }
     }
 }

@@ -15,6 +15,10 @@ namespace BlastGame.Runtime
     {
         [SerializeField] private List<ItemData> itemDatabase = new();
 
+        private int _groupAThreshold = 3;
+        private int _groupBThreshold = 4;
+        private int _groupCThreshold = 5;
+
         public List<IItem> Items { get; private set; } = new();
         public CustomEvent<List<IItem>> OnItemsBlasted = new();
 
@@ -33,6 +37,8 @@ namespace BlastGame.Runtime
 
         private void CreateItems(int width, int height)
         {
+            Items.Clear();
+
             for (int x = 0; x < width;  x++)
             {
                 for (int y = 0; y < height; y++)
@@ -45,6 +51,8 @@ namespace BlastGame.Runtime
                     CreateItem(tile);
                 }
             }
+
+            CheckItemGroups();
         }
 
         private void CreateItem(GridTile tile, bool allowObstacles = true)
@@ -116,6 +124,33 @@ namespace BlastGame.Runtime
         {
             MoveItemsToEmptyTiles();
             RefillTilesWithItems();
+            CheckItemGroups();
+        }
+
+        private void CheckItemGroups()
+        {
+            List<IItem> items = new(Items);
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i] == null)
+                    continue;
+
+                BlastableVisualType visualType = BlastableVisualType.Default;
+                List<IItem> itemGroup = GetAllMatchedAdjacentItems(items[i]);
+
+                if (itemGroup.Count < _groupAThreshold)
+                    visualType = BlastableVisualType.Default;
+                else if (itemGroup.Count >= _groupAThreshold && itemGroup.Count < _groupBThreshold)
+                    visualType = BlastableVisualType.A;
+                else if (itemGroup.Count >= _groupBThreshold && itemGroup.Count < _groupCThreshold)
+                    visualType = BlastableVisualType.B;
+                else if (itemGroup.Count >= _groupCThreshold)
+                    visualType = BlastableVisualType.C;
+
+                foreach (var item in itemGroup)
+                    item.SetBlastableGroup(visualType);
+            }
         }
 
         private void MoveItemsToEmptyTiles()

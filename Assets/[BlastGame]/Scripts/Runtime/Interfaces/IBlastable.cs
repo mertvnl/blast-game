@@ -1,3 +1,4 @@
+using BlastGame.Runtime.Models;
 using Core.Systems;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,5 +11,6 @@ namespace BlastGame.Interface
         public CustomEvent OnBlasted { get; }
         bool CanBlast { get; }
         void Blast();
+        void SetBlastableGroup(BlastableVisualType visualType);
     }
 }
