@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Level 01
   m_EditorClassIdentifier: 
   GridData:
-    Width: 10
-    Height: 10
+    Width: 5
+    Height: 8
     GridTilePrefab: {fileID: 716983137307882125, guid: c813d4d0c3699ab4689e84bc8e24a2c5, type: 3}
   AllowObstacles: 1
   TotalItemColorCount: 6
