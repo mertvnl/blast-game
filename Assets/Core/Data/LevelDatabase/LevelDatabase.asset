@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: LevelDatabase
   m_EditorClassIdentifier: 
   levels:
-  - levelId: Level 01
-    levelType: 0
+  - LevelId: Level 01
+    LevelType: 0
+    LevelData: {fileID: 11400000, guid: 36013ebb9aa47a94d960f96f82caa6a7, type: 2}

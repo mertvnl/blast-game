@@ -14,7 +14,7 @@ namespace Core.Models
         {
             for (int i = 0; i < levels.Length; i++)
             {
-                if (levels[i].levelId == id)
+                if (levels[i].LevelId == id)
                     return i;
             }
 
@@ -23,7 +23,7 @@ namespace Core.Models
 
         public string GetLevelIdByIndex(int index)
         {
-            return levels[index].levelId;
+            return levels[index].LevelId;
         }
 
         public Level GetLevelByIndex(int index)

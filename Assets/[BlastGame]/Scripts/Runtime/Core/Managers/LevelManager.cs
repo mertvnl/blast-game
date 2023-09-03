@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BlastGame.Runtime.Models;
 using Core.Models;
 using Core.Systems;
 using Core.Utilities;
@@ -61,7 +62,7 @@ namespace Core.Managers
             OnLevelLoadingStarted.Invoke();
             yield return new WaitForSeconds(1f);
             Level targetLevel = levelDatabase.GetLevelByIndex(levelIndex);
-            yield return SceneManager.LoadSceneAsync(targetLevel.levelId);
+            yield return SceneManager.LoadSceneAsync(targetLevel.LevelId);
             yield return new WaitForSeconds(0.5f);
             currentLevelIndex = levelIndex;
             SaveManager.SetInt("LastLevelIndex", currentLevelIndex);
@@ -131,8 +132,9 @@ namespace Core.Managers
     public struct Level
     {
         [ValueDropdown("GetScenesInBuildSettings")]
-        public string levelId;
-        public LevelType levelType;
+        public string LevelId;
+        public LevelType LevelType;
+        public LevelData LevelData;
 
     #if UNITY_EDITOR
         private IEnumerable<string> GetScenesInBuildSettings()

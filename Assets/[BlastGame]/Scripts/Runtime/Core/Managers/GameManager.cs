@@ -1,6 +1,7 @@
 using Core.Systems;
 using Core.Utilities;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Core.Managers
 {
@@ -10,6 +11,8 @@ namespace Core.Managers
 
         public CustomEvent<bool> OnLevelCompleted = new();
 
+        private const int TARGET_FPS = 60;
+
         private void OnEnable()
         {
             LevelManager.Instance.OnLevelLoaded.AddListener(ResetLevelCompletionStatus);
@@ -18,6 +21,11 @@ namespace Core.Managers
         private void OnDisable()
         {
             LevelManager.Instance.OnLevelLoaded.RemoveListener(ResetLevelCompletionStatus);
+        }
+
+        private void Awake()
+        {
+            Application.targetFrameRate = TARGET_FPS;
         }
 
         [Button]

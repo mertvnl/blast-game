@@ -1,9 +1,9 @@
 using BlastGame.Interface;
 using BlastGame.Runtime.Models;
+using Core.Managers;
 using Core.Systems;
 using Core.Utilities;
 using Sirenix.OdinInspector;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,59 +13,83 @@ namespace BlastGame.Runtime
 {
     public class ItemManager : Singleton<ItemManager>
     {
-        [SerializeField] private List<ItemData> itemDatabase = new();
-
-        private int _groupAThreshold = 3;
-        private int _groupBThreshold = 4;
-        private int _groupCThreshold = 5;
-
         public List<IItem> Items { get; private set; } = new();
         public CustomEvent<List<IItem>> OnItemsBlasted = new();
 
         private const float SPAWN_OFFSET_Y = 1f;
         private readonly Vector2[] ADJACENT_CHECK_POSITIONS = { Vector2.up , Vector2.down, Vector2.left, Vector2.right };
 
+        private LevelData _levelData;
+        private List<ItemData> _chosenItems = new();
+
         private void OnEnable()
         {
-            GridManager.Instance.OnGridInitialized.AddListener(CreateItems);
+            GridManager.Instance.OnGridInitialized.AddListener(Initialize);
         }
 
         private void OnDisable()
         {
-            GridManager.Instance.OnGridInitialized.RemoveListener(CreateItems);
+            GridManager.Instance.OnGridInitialized.RemoveListener(Initialize);
         }
 
-        private void CreateItems(int width, int height)
+        private void CacheLevelData()
+        {
+            _levelData = LevelManager.Instance.CurrentLevel.LevelData;
+        }
+
+        private void Initialize(int width, int height)
+        {
+            CacheLevelData();
+            SetChosenItems();
+            CreateInitialItems(width, height);
+            CheckItemGroups();
+        }
+
+        private void SetChosenItems()
+        {
+            List<ItemData> items = new(_levelData.BlastableItemDatabase);
+
+            for (int i = 0; i < _levelData.TotalItemColorCount; i++)
+            {
+                ItemData itemData = items.GetRandom();
+                _chosenItems.Add(itemData);
+                items.Remove(itemData);
+            }
+        }
+
+        private void CreateInitialItems(int width, int height)
         {
             Items.Clear();
 
-            for (int x = 0; x < width;  x++)
+            if (_levelData.AllowObstacles)
+            {
+                for (int i = 0; i < _levelData.ObstacleCreationCount; i++)
+                {
+                    GridTile tile = GridManager.Instance.GetRandomEmptyTile();
+
+                    CreateItem(tile, _levelData.ObstacleItemDatabase.GetRandom());
+                }
+            }
+
+
+            for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
                     GridTile tile = GridManager.Instance.GetTileAtPosition(new Vector2(x, y));
-                    
-                    if (tile == null)
+
+                    if (!tile.IsEmpty)
                         continue;
 
-                    CreateItem(tile);
+                    CreateItem(tile, _chosenItems.GetRandom());
                 }
             }
-
-            CheckItemGroups();
         }
 
-        private void CreateItem(GridTile tile, bool allowObstacles = true)
+        private void CreateItem(GridTile tile, ItemData itemData)
         {
-            List<ItemData> itemDatas = new(itemDatabase);
-            
-            if (!allowObstacles)
-                itemDatas.RemoveAll(data => data is ObstacleItemData);
-
-            ItemData itemData = itemDatas.GetRandom();
-
             Vector2 spawnPosition = new(tile.GetGridPosition().x, GridManager.Instance.GetGridSize().y + SPAWN_OFFSET_Y);
-            IItem item = Instantiate(itemData.ItemPrefab, spawnPosition, Quaternion.identity);
+            IItem item = Instantiate(itemData.ItemPrefab, spawnPosition, Quaternion.identity, GridManager.Instance.GridRoot);
             item.Initialize(itemData, tile);
         }
 
@@ -119,7 +143,6 @@ namespace BlastGame.Runtime
             OnItemsBlasted.Invoke(itemsToBlast);
         }
 
-        [Button]
         public void UpdateGridItems()
         {
             MoveItemsToEmptyTiles();
@@ -139,13 +162,13 @@ namespace BlastGame.Runtime
                 BlastableVisualType visualType = BlastableVisualType.Default;
                 List<IItem> itemGroup = GetAllMatchedAdjacentItems(items[i]);
 
-                if (itemGroup.Count < _groupAThreshold)
+                if (itemGroup.Count < _levelData.BlastableGroupAThreshold)
                     visualType = BlastableVisualType.Default;
-                else if (itemGroup.Count >= _groupAThreshold && itemGroup.Count < _groupBThreshold)
+                else if (itemGroup.Count >= _levelData.BlastableGroupAThreshold && itemGroup.Count < _levelData.BlastableGroupBThreshold)
                     visualType = BlastableVisualType.A;
-                else if (itemGroup.Count >= _groupBThreshold && itemGroup.Count < _groupCThreshold)
+                else if (itemGroup.Count >= _levelData.BlastableGroupBThreshold && itemGroup.Count < _levelData.BlastableGroupCThreshold)
                     visualType = BlastableVisualType.B;
-                else if (itemGroup.Count >= _groupCThreshold)
+                else if (itemGroup.Count >= _levelData.BlastableGroupCThreshold)
                     visualType = BlastableVisualType.C;
 
                 foreach (var item in itemGroup)
@@ -183,7 +206,7 @@ namespace BlastGame.Runtime
             List<GridTile> emptyTiles = GridManager.Instance.GetFillableTiles();
 
             foreach (GridTile emptyTile in emptyTiles)
-                CreateItem(emptyTile, false);
+                CreateItem(emptyTile, _chosenItems.GetRandom());
         }
 
         private List<IItem> GetMatchedAdjacentItems(IItem item)
@@ -225,7 +248,7 @@ namespace BlastGame.Runtime
             if (currentMatchedAdjacents.Count == 0)
                 return;
 
-            foreach (var adjacentItem in currentMatchedAdjacents)
+            foreach (IItem adjacentItem in currentMatchedAdjacents)
             {
                 if (adjacents.Contains(adjacentItem))
                     continue;
@@ -233,6 +256,20 @@ namespace BlastGame.Runtime
                 adjacents.Add(adjacentItem);
                 GetAllMatchedAdjacentItems(adjacentItem, ref adjacents);
             }
+        }
+
+        [Button]
+        public void ShuffleItems()
+        {
+            List<IItem> randomizedItems = new(Items);
+            randomizedItems.Shuffle();
+
+            for (int i = 0; i < Items.Count; i++)
+            {
+                Items[i].Move(randomizedItems[i].CurrentGridTile.GetGridPosition());
+            }
+
+            CheckItemGroups();
         }
     }
 }

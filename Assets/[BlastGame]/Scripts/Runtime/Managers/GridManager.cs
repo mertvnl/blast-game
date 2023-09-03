@@ -1,24 +1,27 @@
+using BlastGame.Runtime.Models;
 using Core.Managers;
 using Core.Systems;
 using Core.Utilities;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace BlastGame.Runtime
 {
     public class GridManager : Singleton<GridManager>
     {
-        [SerializeField] private int width, height;
-        [SerializeField] private GridTile gridTilePrefab;
-        
         private const float X_OFFSET = -0.15f;
         private const float Y_OFFSET = 1f;
 
-        public CustomEvent<int, int> OnGridInitialized = new();
-
         private Dictionary<Vector2, GridTile> _tiles;
         public Dictionary<Vector2, GridTile> Tiles => _tiles;
+
+        public Transform GridRoot { get; private set; }
+
+        public CustomEvent<int, int> OnGridInitialized = new();
+
+        private GridData _gridData;
 
         private void OnEnable()
         {
@@ -33,19 +36,21 @@ namespace BlastGame.Runtime
         public void InitializeGrid()
         {
             _tiles = new();
-            Transform gridRoot = new GameObject("GridRoot").transform;
+            GridRoot = new GameObject(nameof(GridRoot)).transform;
 
-            for (int x = 0; x < width; x++)
+            _gridData = LevelManager.Instance.CurrentLevel.LevelData.GridData;
+
+            for (int x = 0; x < _gridData.Width; x++)
             {
-                for(int y = 0; y < height; y++)
+                for(int y = 0; y < _gridData.Height; y++)
                 {
-                    GridTile instantiatedTile = Instantiate(gridTilePrefab, new Vector3(x, y), Quaternion.identity, gridRoot);
+                    GridTile instantiatedTile = Instantiate(_gridData.GridTilePrefab, new Vector3(x, y), Quaternion.identity, GridRoot);
                     instantiatedTile.InitializeTile(x, y);
                     _tiles.Add(new Vector2(x,y), instantiatedTile);
                 }
             }
 
-            OnGridInitialized.Invoke(width, height);
+            OnGridInitialized.Invoke(_gridData.Width, _gridData.Height);
         }
 
         public GridTile GetTileAtPosition(Vector2 position)
@@ -95,9 +100,9 @@ namespace BlastGame.Runtime
         {
             List<GridTile> emptyTiles = new();
 
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < _gridData.Width; x++)
             {
-                for (int y = height - 1; y >= 0; y--)
+                for (int y = _gridData.Height - 1; y >= 0; y--)
                 {
                     GridTile tile = GetTileAtPosition(new Vector2(x, y));
 
@@ -118,9 +123,9 @@ namespace BlastGame.Runtime
         {
             List<GridTile> tilesWithItem = new();
 
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < _gridData.Width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for (int y = 0; y < _gridData.Height; y++)
                 {
                     GridTile tile = GetTileAtPosition(new Vector2(x, y));
 
@@ -136,7 +141,17 @@ namespace BlastGame.Runtime
 
         public Vector2 GetGridSize()
         {
-            return new Vector2(width, height);
+            return new Vector2(_gridData.Width, _gridData.Height);
+        }
+
+        public GridTile GetRandomEmptyTile()
+        {
+            List<GridTile> emptyTiles = Tiles.Values.Where(tile => tile.IsEmpty).ToList();
+
+            if (emptyTiles.Count == 0 || emptyTiles == null)
+                return null;
+
+            return emptyTiles.GetRandom();
         }
     }
 }
