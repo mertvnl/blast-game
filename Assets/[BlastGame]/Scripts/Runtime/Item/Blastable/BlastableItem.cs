@@ -25,9 +25,7 @@ namespace BlastGame.Runtime
                 return;
 
             if (!ItemManager.Instance.IsAdjacentMatching(this))
-            {
                 return;
-            }
 
             ItemManager.Instance.BlastAllMatches(this);
             MovesManager.Instance.DecreaseMoveCount();
