@@ -47,7 +47,13 @@ namespace BlastGame.Runtime.Models
 
         [BoxGroup("Level Settings")]
         [InfoBox("Target score required to win the level.")]
+        [Range(100, 1000000)]
         public int RequiredScore;
+
+        [BoxGroup("Level Settings")]
+        [InfoBox("Move count that player can make in this level.")]
+        [Range(1, 1000)]
+        public int MoveCount;
 
         public int MaxBlastableCount => BlastableItemDatabase.Count;
     }
