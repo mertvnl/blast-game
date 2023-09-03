@@ -1,4 +1,3 @@
-using BlastGame.Interface;
 using Core.Managers;
 using Core.Systems;
 using Core.Utilities;
@@ -57,32 +56,28 @@ namespace BlastGame.Runtime
             return null;
         }
 
-        public GridTile GetLowestEmptyTileAtRow(int x)
+        public GridTile GetLowestEmptyTileAtRow(Vector2 position)
         {
+            int targetHeight = (int)position.y;
             int startHeight = 0;
 
-            for (int y = height - 1; y >= height; y--)
+            for (int y = targetHeight; y > -1; y--)
             {
-                GridTile tile = GetTileAtPosition(new Vector2(x, y));
+                GridTile tile = GetTileAtPosition(new Vector2(position.x, y));
 
                 if (tile == null)
                     continue;
 
                 if (!tile.IsEmpty && !tile.CurrentItem.CanMove)
                 {
-                    Debug.Log(y + " " + (int)tile.GetGridPosition().y);
-
-                    startHeight = (int)tile.GetGridPosition().y;
+                    startHeight = y;
                     break;
                 }
-
-                if (tile.IsEmpty)
-                    continue;
             }
 
-            for (int y = startHeight; y < height; y++)
+            for (int y = startHeight; y < targetHeight; y++)
             {
-                GridTile tile = GetTileAtPosition(new Vector2(x, y));
+                GridTile tile = GetTileAtPosition(new Vector2(position.x, y));
 
                 if (tile == null)
                     continue;

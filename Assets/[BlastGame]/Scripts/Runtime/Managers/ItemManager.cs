@@ -134,7 +134,7 @@ namespace BlastGame.Runtime
                 if (!tileAtBelow.IsEmpty)
                     continue;
 
-                GridTile lowestTile = GridManager.Instance.GetLowestEmptyTileAtRow((int)positionToCheck.x);
+                GridTile lowestTile = GridManager.Instance.GetLowestEmptyTileAtRow(tile.GetGridPosition());
 
                 if (lowestTile == null)
                     continue;
