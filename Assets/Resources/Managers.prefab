@@ -277,7 +277,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8580c6a890b8aa4fbf7e956e8eba7ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blastableItem: {fileID: 1148212562131280963, guid: e42cb0b0d95a3df48925138129ac57a2, type: 3}
   itemDatabase:
   - {fileID: 11400000, guid: d4cadfa8eb2bd9c4f8617b8473132e1f, type: 2}
   - {fileID: 11400000, guid: 48ce776296adb594bb2e4124917af409, type: 2}
@@ -285,6 +284,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 519b348945f869f4188cf5213fa51ad6, type: 2}
   - {fileID: 11400000, guid: 5e3b714e37fb7ee448e61bc52d75319c, type: 2}
   - {fileID: 11400000, guid: 30db0b63b8fd8a0448c6c3b8186cdb3e, type: 2}
+  - {fileID: 11400000, guid: ccccd34cc76cb5b43b8abd087b240e40, type: 2}
 --- !u!1 &6905528262956529874
 GameObject:
   m_ObjectHideFlags: 0
