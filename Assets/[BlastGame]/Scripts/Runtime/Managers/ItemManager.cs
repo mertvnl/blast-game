@@ -47,6 +47,8 @@ namespace BlastGame.Runtime
 
         private void SetChosenItems()
         {
+            _chosenItems.Clear();
+
             List<ItemData> items = new(_levelData.BlastableItemDatabase);
 
             for (int i = 0; i < _levelData.TotalItemColorCount; i++)
