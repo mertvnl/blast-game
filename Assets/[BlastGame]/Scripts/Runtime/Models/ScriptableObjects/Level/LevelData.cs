@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -55,6 +56,17 @@ namespace BlastGame.Runtime.Models
         [Range(1, 1000)]
         public int MoveCount;
 
+        [BoxGroup("Level Settings")]
+        [InfoBox("Level seed initializes randomness in order to generate same level items for every device.")]
+        [ReadOnly]
+        public string LevelSeed;
+
         public int MaxBlastableCount => BlastableItemDatabase.Count;
+
+        [Button]
+        private void GenerateLevelSeed()
+        {
+            LevelSeed = Guid.NewGuid().ToString();
+        }
     }
 }

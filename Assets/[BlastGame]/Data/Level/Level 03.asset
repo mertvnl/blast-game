@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82d4f0bc890273e4daab98f960e4a512, type: 3}
-  m_Name: Level 02
+  m_Name: Level 03
   m_EditorClassIdentifier: 
   GridData:
-    Width: 3
-    Height: 5
+    Width: 5
+    Height: 8
     GridTilePrefab: {fileID: 716983137307882125, guid: c813d4d0c3699ab4689e84bc8e24a2c5, type: 3}
   AllowObstacles: 1
-  TotalItemColorCount: 3
-  ObstacleCreationCount: 1
+  TotalItemColorCount: 6
+  ObstacleCreationCount: 5
   BlastableGroupAThreshold: 3
   BlastableGroupBThreshold: 4
   BlastableGroupCThreshold: 5
@@ -31,6 +31,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 30db0b63b8fd8a0448c6c3b8186cdb3e, type: 2}
   ObstacleItemDatabase:
   - {fileID: 11400000, guid: ccccd34cc76cb5b43b8abd087b240e40, type: 2}
-  RequiredScore: 3000
+  RequiredScore: 7000
   MoveCount: 25
-  LevelSeed: 13b148a5-f910-4c0f-a903-3547bf9c3123
+  LevelSeed: 2a3b72ca-3eea-4595-b960-3095bfbe42d3

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GridData:
     Width: 3
-    Height: 5
+    Height: 4
     GridTilePrefab: {fileID: 716983137307882125, guid: c813d4d0c3699ab4689e84bc8e24a2c5, type: 3}
-  AllowObstacles: 1
+  AllowObstacles: 0
   TotalItemColorCount: 2
   ObstacleCreationCount: 1
   BlastableGroupAThreshold: 3
@@ -33,3 +33,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ccccd34cc76cb5b43b8abd087b240e40, type: 2}
   RequiredScore: 3000
   MoveCount: 25
+  LevelSeed: 7811f321-e601-4452-a89f-e5059be71551

@@ -40,6 +40,7 @@ namespace BlastGame.Runtime
         private void Initialize(int width, int height)
         {
             CacheLevelData();
+            InitializeRandomnessBySeed();
             SetChosenItems();
             CreateInitialItems(width, height);
             CheckItemGroups();
@@ -57,6 +58,14 @@ namespace BlastGame.Runtime
                 _chosenItems.Add(itemData);
                 items.Remove(itemData);
             }
+        }
+
+        private void InitializeRandomnessBySeed()
+        {
+            if (ReferenceEquals(_levelData.LevelSeed, string.Empty))
+                return;
+
+            Random.InitState(Animator.StringToHash(_levelData.LevelSeed));
         }
 
         private void CreateInitialItems(int width, int height)
