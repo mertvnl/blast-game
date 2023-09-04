@@ -19,7 +19,7 @@ namespace BlastGame.Runtime
         private List<ItemData> _chosenItems = new();
 
         private const float INITIAL_SPAWN_OFFSET_Y = 1f;
-        private readonly Vector2[] ADJACENT_CHECK_POSITIONS = { Vector2.up , Vector2.down, Vector2.left, Vector2.right };
+        private readonly Vector2Int[] ADJACENT_CHECK_POSITIONS = { Vector2Int.up , Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
         private void OnEnable()
         {
@@ -98,7 +98,7 @@ namespace BlastGame.Runtime
             {
                 for (int y = 0; y < height; y++)
                 {
-                    GridTile tile = GridManager.Instance.GetTileAtPosition(new Vector2(x, y));
+                    GridTile tile = GridManager.Instance.GetTileAtPosition(new Vector2Int(x, y));
 
                     if (!tile.IsEmpty)
                         continue;
@@ -233,7 +233,7 @@ namespace BlastGame.Runtime
 
             foreach (GridTile tile in tiles)
             {
-                Vector2 positionToCheck = tile.GetGridPosition() + Vector2.down;
+                Vector2Int positionToCheck = tile.GetGridPosition() + Vector2Int.down;
 
                 GridTile tileAtBelow = GridManager.Instance.GetTileAtPosition(positionToCheck);
 
@@ -272,7 +272,7 @@ namespace BlastGame.Runtime
         {
             List<IItem> matchedAdjacents = new();
 
-            foreach (Vector2 adjacentPosition in ADJACENT_CHECK_POSITIONS)
+            foreach (Vector2Int adjacentPosition in ADJACENT_CHECK_POSITIONS)
             {
                 GridTile tile = GridManager.Instance.GetTileAtPosition(item.CurrentGridTile.GetGridPosition() + adjacentPosition);
 

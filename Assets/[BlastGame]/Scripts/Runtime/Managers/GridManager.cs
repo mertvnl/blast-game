@@ -13,8 +13,8 @@ namespace BlastGame.Runtime
 {
     public class GridManager : Singleton<GridManager>
     {
-        private Dictionary<Vector2, GridTile> _tiles;
-        public Dictionary<Vector2, GridTile> Tiles => _tiles;
+        private Dictionary<Vector2Int, GridTile> _tiles;
+        public Dictionary<Vector2Int, GridTile> Tiles => _tiles;
 
         public Transform GridRoot { get; private set; }
         public CustomEvent<int, int> OnGridInitialized = new();
@@ -54,7 +54,7 @@ namespace BlastGame.Runtime
                 {
                     GridTile instantiatedTile = Instantiate(_gridData.GridTilePrefab, new Vector3(x, y), Quaternion.identity, GridRoot);
                     instantiatedTile.InitializeTile(x, y);
-                    _tiles.Add(new Vector2(x,y), instantiatedTile);
+                    _tiles.Add(new Vector2Int(x,y), instantiatedTile);
                 }
             }
 
@@ -85,7 +85,7 @@ namespace BlastGame.Runtime
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
-        public GridTile GetTileAtPosition(Vector2 position)
+        public GridTile GetTileAtPosition(Vector2Int position)
         {
             if (_tiles.TryGetValue(position, out GridTile tile))
                 return tile;
@@ -99,14 +99,14 @@ namespace BlastGame.Runtime
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
-        public GridTile GetLowestEmptyTileAtRow(Vector2 position)
+        public GridTile GetLowestEmptyTileAtRow(Vector2Int position)
         {
-            int targetHeight = (int)position.y;
+            int targetHeight = position.y;
             int startHeight = 0;
 
             for (int y = targetHeight; y > -1; y--)
             {
-                GridTile tile = GetTileAtPosition(new Vector2(position.x, y));
+                GridTile tile = GetTileAtPosition(new Vector2Int(position.x, y));
 
                 if (tile == null)
                     continue;
@@ -120,7 +120,7 @@ namespace BlastGame.Runtime
 
             for (int y = startHeight; y < targetHeight; y++)
             {
-                GridTile tile = GetTileAtPosition(new Vector2(position.x, y));
+                GridTile tile = GetTileAtPosition(new Vector2Int(position.x, y));
 
                 if (tile == null)
                     continue;
@@ -147,7 +147,7 @@ namespace BlastGame.Runtime
             {
                 for (int y = _gridData.Height - 1; y >= 0; y--)
                 {
-                    GridTile tile = GetTileAtPosition(new Vector2(x, y));
+                    GridTile tile = GetTileAtPosition(new Vector2Int(x, y));
 
                     if (!tile.IsEmpty && !tile.CurrentItem.CanMove)
                         break;
@@ -174,7 +174,7 @@ namespace BlastGame.Runtime
             {
                 for (int y = 0; y < _gridData.Height; y++)
                 {
-                    GridTile tile = GetTileAtPosition(new Vector2(x, y));
+                    GridTile tile = GetTileAtPosition(new Vector2Int(x, y));
 
                     if (tile.IsEmpty)
                         continue;
