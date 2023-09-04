@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: PinkBlastableItemData
   m_EditorClassIdentifier: 
   <ItemPrefab>k__BackingField: {fileID: 1148212562131280963, guid: e42cb0b0d95a3df48925138129ac57a2, type: 3}
+  <DisposeParticle>k__BackingField: {fileID: 3161727979763634893, guid: c8b9f72f8b53bd44299ba79faa10405b, type: 3}
   <DefaultSprite>k__BackingField: {fileID: 21300000, guid: e8bc3251953c0d14086d1cda99ce3d30, type: 3}
   <ScoreAmount>k__BackingField: 100
   <BlastableVisualDictionary>k__BackingField:

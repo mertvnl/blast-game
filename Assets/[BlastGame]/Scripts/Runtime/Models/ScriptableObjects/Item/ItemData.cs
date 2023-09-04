@@ -7,6 +7,7 @@ namespace BlastGame.Runtime.Models
     public abstract class ItemData : ScriptableObject
     {
         [field: SerializeField] public ItemBase ItemPrefab { get; private set; }
+        [field: SerializeField] public ParticleSystem DisposeParticle { get; private set; }
         [field: SerializeField] public Sprite DefaultSprite { get; private set; }
         [field: SerializeField] public int ScoreAmount { get; private set; }
     }

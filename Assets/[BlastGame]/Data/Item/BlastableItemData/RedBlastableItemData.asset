@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: RedBlastableItemData
   m_EditorClassIdentifier: 
   <ItemPrefab>k__BackingField: {fileID: 1148212562131280963, guid: e42cb0b0d95a3df48925138129ac57a2, type: 3}
+  <DisposeParticle>k__BackingField: {fileID: 4860452858181212743, guid: b7bf08469aaded7428bd0fa6231b29ab, type: 3}
   <DefaultSprite>k__BackingField: {fileID: 21300000, guid: 0e9703723f3907644b52995af191e839, type: 3}
   <ScoreAmount>k__BackingField: 100
   <BlastableVisualDictionary>k__BackingField:

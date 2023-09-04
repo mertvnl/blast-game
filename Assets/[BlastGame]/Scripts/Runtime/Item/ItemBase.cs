@@ -71,6 +71,7 @@ namespace BlastGame.Runtime
         {
             ScoreManager.Instance.AddScore(ItemData.ScoreAmount);
             CurrentGridTile.SetItem(null);
+            Instantiate(ItemData.DisposeParticle, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
 
