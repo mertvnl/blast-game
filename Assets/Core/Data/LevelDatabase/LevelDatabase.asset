@@ -22,3 +22,6 @@ MonoBehaviour:
   - LevelId: MainLevel
     LevelType: 0
     LevelData: {fileID: 11400000, guid: 5df5adf0652426d469ca89a146b917f7, type: 2}
+  - LevelId: MainLevel
+    LevelType: 0
+    LevelData: {fileID: 11400000, guid: 626745a5c95fb487f8bfac0484374f72, type: 2}

@@ -26,7 +26,7 @@ namespace BlastGame.Runtime.Models
         [InfoBox("Amount of obstacles to create while initializing the items.")]
         [BoxGroup("Item Settings")]
         [ShowIf("AllowObstacles")]
-        [Range(0, 10)]
+        [Range(0, 100)]
         public int ObstacleCreationCount;
 
         [Space(10)]
