@@ -34,6 +34,9 @@ namespace BlastGame.Runtime
             return new Vector2(_x, _y);
         }
 
+        /// <summary>
+        /// Returns grid position with grid offset. Helps with item positioning.
+        /// </summary>
         public Vector2 GetGridPositionWithOffset()
         {
             return new Vector2(_x + (_x * GridManager.Instance.GRID_OFFSET), _y + (_y * GridManager.Instance.GRID_OFFSET));

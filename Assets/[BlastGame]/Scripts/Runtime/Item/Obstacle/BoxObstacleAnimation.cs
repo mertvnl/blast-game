@@ -31,6 +31,10 @@ namespace BlastGame.Runtime
             Damageable.OnHealthChanged.RemoveListener(CheckHealth);
         }
 
+        /// <summary>
+        /// Checks health in order to prevent animation while disposing.
+        /// </summary>
+        /// <param name="health"></param>
         private void CheckHealth(int health)
         {
             if (health <= 0)
@@ -39,6 +43,9 @@ namespace BlastGame.Runtime
             ShakeAnimation();
         }
 
+        /// <summary>
+        /// Simple animation that happens when box obstacle's health is changed.
+        /// </summary>
         private void ShakeAnimation()
         {
             _scaleTween?.Kill(true);

@@ -26,6 +26,10 @@ namespace BlastGame.Runtime
             CanMove = false;
         }
 
+        /// <summary>
+        /// When a blastable item group is blasted, checks if any of them is adjacent. If so, gets blasted.
+        /// </summary>
+        /// <param name="blastedItems"></param>
         private void CheckIfAdjacent(List<IItem> blastedItems)
         {
             if (!ItemManager.Instance.IsAdjacent(this, blastedItems))

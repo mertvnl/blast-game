@@ -45,6 +45,9 @@ namespace BlastGame.Runtime
             CheckItemGroups();
         }
 
+        /// <summary>
+        /// Gets random items by given count from level data.
+        /// </summary>
         private void SetChosenItems()
         {
             _chosenItems.Clear();
@@ -59,6 +62,11 @@ namespace BlastGame.Runtime
             }
         }
 
+        /// <summary>
+        /// Initalizes randomness in order to have random but unique item creation randomness.
+        /// This is helpful because if player fails level X, when it is played again level it will be same level.
+        /// Also every device will have same randomness.
+        /// </summary>
         private void InitializeRandomnessBySeed()
         {
             if (ReferenceEquals(_levelData.LevelSeed, string.Empty))
@@ -67,6 +75,11 @@ namespace BlastGame.Runtime
             Random.InitState(Animator.StringToHash(_levelData.LevelSeed));
         }
 
+        /// <summary>
+        /// Creates starting items and obstacles by given width and height.
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         private void CreateInitialItems(int width, int height)
         {
             Items.Clear();
@@ -80,7 +93,6 @@ namespace BlastGame.Runtime
                     CreateItem(tile, _levelData.ObstacleItemDatabase.GetRandom());
                 }
             }
-
 
             for (int x = 0; x < width; x++)
             {
@@ -96,6 +108,11 @@ namespace BlastGame.Runtime
             }
         }
 
+        /// <summary>
+        /// Creates an item and initalizes it.
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <param name="itemData"></param>
         private void CreateItem(GridTile tile, ItemData itemData)
         {
             Vector2 spawnPosition = new(tile.GetGridPositionWithOffset().x, GridManager.Instance.GetGridSize().y + INITIAL_SPAWN_OFFSET_Y);
@@ -119,11 +136,22 @@ namespace BlastGame.Runtime
             Items.Remove(item);
         }
 
+        /// <summary>
+        /// Checks if given item's adjacents are same or not.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public bool IsAdjacentMatching(IItem item)
         {
             return GetMatchedAdjacentItems(item).Count > 0;
         }
 
+        /// <summary>
+        /// Checks if given item is adjacent of given items from list.
+        /// </summary>
+        /// <param name="targetItem"></param>
+        /// <param name="itemsToCheck"></param>
+        /// <returns></returns>
         public bool IsAdjacent(IItem targetItem, List<IItem> itemsToCheck)
         {
             foreach (IItem item in itemsToCheck)
@@ -138,6 +166,10 @@ namespace BlastGame.Runtime
             return false;
         }
 
+        /// <summary>
+        /// Blasts group if items by given item.
+        /// </summary>
+        /// <param name="item"></param>
         public void BlastAllMatches(IItem item)
         {
             List<IItem> itemsToBlast = GetAllMatchedAdjacentItems(item);
@@ -153,6 +185,9 @@ namespace BlastGame.Runtime
             OnItemsBlasted.Invoke(itemsToBlast);
         }
 
+        /// <summary>
+        /// Updates grid items by moving items into empty tiles, refilling tiles and checking item groups.
+        /// </summary>
         public void UpdateGridItems()
         {
             MoveItemsToEmptyTiles();
@@ -160,6 +195,9 @@ namespace BlastGame.Runtime
             CheckItemGroups();
         }
 
+        /// <summary>
+        /// Checks current items' group count and sets their blastable group.
+        /// </summary>
         private void CheckItemGroups()
         {
             List<IItem> items = new(Items);
@@ -186,6 +224,9 @@ namespace BlastGame.Runtime
             }
         }
 
+        /// <summary>
+        /// Moves items into empty tiles.
+        /// </summary>
         private void MoveItemsToEmptyTiles()
         {
             List<GridTile> tiles = GridManager.Instance.GetTilesWithItem();
@@ -211,6 +252,9 @@ namespace BlastGame.Runtime
             }
         }
 
+        /// <summary>
+        /// Refills empty tiles.
+        /// </summary>
         private void RefillTilesWithItems()
         {
             List<GridTile> emptyTiles = GridManager.Instance.GetFillableTiles();
@@ -219,6 +263,11 @@ namespace BlastGame.Runtime
                 CreateItem(emptyTile, _chosenItems.GetRandom());
         }
 
+        /// <summary>
+        /// Checks adjacent of given item. Then returns any.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         private List<IItem> GetMatchedAdjacentItems(IItem item)
         {
             List<IItem> matchedAdjacents = new();
@@ -242,6 +291,11 @@ namespace BlastGame.Runtime
             return matchedAdjacents;
         }
 
+        /// <summary>
+        /// Gets all blastable group of given item.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         private List<IItem> GetAllMatchedAdjacentItems(IItem item)
         {
             List<IItem> allMatchedAdjacentItems = new() { item };
@@ -251,6 +305,11 @@ namespace BlastGame.Runtime
             return allMatchedAdjacentItems;
         }
 
+        /// <summary>
+        /// Recursive method to get all matched adjacent items.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="adjacents"></param>
         private void GetAllMatchedAdjacentItems(IItem item, ref List<IItem> adjacents)
         {
             List<IItem> currentMatchedAdjacents = GetMatchedAdjacentItems(item);
@@ -268,6 +327,9 @@ namespace BlastGame.Runtime
             }
         }
 
+        /// <summary>
+        /// Shuffles items and moves them to their new grid tiles. Then checks for item groups.
+        /// </summary>
         public void ShuffleItems()
         {
             List<GridTile> gridTiles = new();

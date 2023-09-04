@@ -48,6 +48,10 @@ namespace BlastGame.Runtime
             _initialHealth = initialHealth;
         }
 
+        /// <summary>
+        /// Checks current health whether it is half or not.
+        /// </summary>
+        /// <param name="currentHealth"></param>
         private void CheckIfHealthIsHalf(int currentHealth)
         {
             if (currentHealth > _initialHealth / 2)
@@ -56,6 +60,10 @@ namespace BlastGame.Runtime
             UpdateVisual(true);
         }
 
+        /// <summary>
+        /// Updates sprite depending on health status.
+        /// </summary>
+        /// <param name="isHalf">Is current health is half?</param>
         private void UpdateVisual(bool isHalf)
         {
             SpriteRenderer.sprite = isHalf ? _obstacleItemData.LowHealthSprite : _obstacleItemData.DefaultSprite;

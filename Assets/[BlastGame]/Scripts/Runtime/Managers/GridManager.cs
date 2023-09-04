@@ -21,6 +21,9 @@ namespace BlastGame.Runtime
 
         private GridData _gridData;
 
+        /// <summary>
+        /// This offset is required to make items look like they are on top of each other.
+        /// </summary>
         public readonly float GRID_OFFSET = -0.15f;
 
         private void OnEnable()
@@ -33,6 +36,10 @@ namespace BlastGame.Runtime
             LevelManager.Instance.OnLevelLoaded.RemoveListener(InitializeGrid);
         }
 
+
+        /// <summary>
+        /// Initializes grid by current grid data of level.
+        /// </summary>
         public void InitializeGrid()
         {
             _gridData = LevelManager.Instance.CurrentLevel.LevelData.GridData;
@@ -55,6 +62,9 @@ namespace BlastGame.Runtime
             OnGridInitialized.Invoke(_gridData.Width, _gridData.Height);
         }
 
+        /// <summary>
+        /// Creates background for grid depending on the grid size and offset.
+        /// </summary>
         private void CreateGridRoot()
         {
             GridRoot = new GameObject(nameof(GridRoot)).transform;
@@ -70,6 +80,11 @@ namespace BlastGame.Runtime
             GridRoot.transform.DOMove(Vector3.zero, 0.5f).SetEase(Ease.OutBack).SetDelay(0.5f);
         }
 
+        /// <summary>
+        /// Returns the grid tile by given position.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public GridTile GetTileAtPosition(Vector2 position)
         {
             if (_tiles.TryGetValue(position, out GridTile tile))
@@ -78,6 +93,12 @@ namespace BlastGame.Runtime
             return null;
         }
 
+        /// <summary>
+        /// Returns the lowest possible empty tile by given position.
+        /// Does not always returns the lowest because also checks for any obstacles.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public GridTile GetLowestEmptyTileAtRow(Vector2 position)
         {
             int targetHeight = (int)position.y;
@@ -113,6 +134,11 @@ namespace BlastGame.Runtime
             return null;
         }
 
+
+        /// <summary>
+        /// Returns a grid tile list that is fillable by checking from top to bottom.
+        /// </summary>
+        /// <returns></returns>
         public List<GridTile> GetFillableTiles()
         {
             List<GridTile> emptyTiles = new();
@@ -136,6 +162,10 @@ namespace BlastGame.Runtime
             return emptyTiles;
         }
 
+        /// <summary>
+        /// Returns all tiles with item.
+        /// </summary>
+        /// <returns></returns>
         public List<GridTile> GetTilesWithItem()
         {
             List<GridTile> tilesWithItem = new();
@@ -156,11 +186,19 @@ namespace BlastGame.Runtime
             return tilesWithItem;
         }
 
+        /// <summary>
+        /// Returns grid size.
+        /// </summary>
+        /// <returns></returns>
         public Vector2 GetGridSize()
         {
             return new Vector2(_gridData.Width, _gridData.Height);
         }
 
+        /// <summary>
+        /// Helper method to get a random empty tile.
+        /// </summary>
+        /// <returns></returns>
         public GridTile GetRandomEmptyTile()
         {
             List<GridTile> emptyTiles = Tiles.Values.Where(tile => tile.IsEmpty).ToList();

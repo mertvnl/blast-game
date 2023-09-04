@@ -10,6 +10,11 @@ namespace BlastGame.Runtime.Models
     {
         [field: SerializeField] BlastableVisualDictionary BlastableVisualDictionary { get; set; } = new();
 
+        /// <summary>
+        /// Returns sprite by given visual type.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public Sprite GetSpriteByType(BlastableVisualType type)
         {
             if (BlastableVisualDictionary.TryGetValue(type, out Sprite sprite))

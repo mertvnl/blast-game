@@ -39,6 +39,9 @@ namespace BlastGame.Runtime
             _currentScore = 0;
         }
 
+        /// <summary>
+        /// Checks score, if requirements are met, completes level as a success.
+        /// </summary>
         private void CheckScore()
         {
             if (_currentScore < _requiredScore)

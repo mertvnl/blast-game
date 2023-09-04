@@ -37,6 +37,9 @@ namespace BlastGame.Runtime
             CheckMoveCount();
         }
 
+        /// <summary>
+        /// Checks move count, if is player out of move, completes level as a failure.
+        /// </summary>
         private void CheckMoveCount()
         {
             if (_moveCount > 0)

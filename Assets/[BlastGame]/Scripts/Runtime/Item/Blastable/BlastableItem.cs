@@ -16,6 +16,10 @@ namespace BlastGame.Runtime
             CheckIfCanBlast();
         }
 
+        /// <summary>
+        /// Checks if level is started and any matches is exist. If so, asks item manager to blast all matches,
+        /// then decreases move count.
+        /// </summary>
         private void CheckIfCanBlast()
         {
             if (!LevelManager.Instance.IsLevelStarted)
