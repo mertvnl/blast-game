@@ -16,6 +16,7 @@ MonoBehaviour:
     Width: 3
     Height: 4
     GridTilePrefab: {fileID: 716983137307882125, guid: c813d4d0c3699ab4689e84bc8e24a2c5, type: 3}
+    GridSprite: {fileID: 21300000, guid: e2a3d6f12c41d974aa64a9fb6e5982fb, type: 3}
   AllowObstacles: 0
   TotalItemColorCount: 2
   ObstacleCreationCount: 1

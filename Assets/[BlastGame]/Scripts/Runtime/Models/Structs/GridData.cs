@@ -14,5 +14,6 @@ namespace BlastGame.Runtime.Models
         public int Height;
 
         public GridTile GridTilePrefab;
+        public Sprite GridSprite;
     }
 }

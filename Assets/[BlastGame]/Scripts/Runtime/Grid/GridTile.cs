@@ -33,5 +33,10 @@ namespace BlastGame.Runtime
         {
             return new Vector2(_x, _y);
         }
+
+        public Vector2 GetGridPositionWithOffset()
+        {
+            return new Vector2(_x + (_x * GridManager.Instance.GRID_OFFSET), _y + (_y * GridManager.Instance.GRID_OFFSET));
+        }
     }
 }

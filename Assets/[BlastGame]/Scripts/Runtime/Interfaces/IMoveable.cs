@@ -11,6 +11,7 @@ namespace BlastGame.Interface
     public interface IMoveable : IComponent
     {
         bool CanMove { get; }
-        void Move(Vector2 targetPosition, Action onMovementCompleted = null);
+        void Move(GridTile targetGrid, Action onMovementCompleted = null);
+        void UpdateSpriteOrder(int order);
     }
 }

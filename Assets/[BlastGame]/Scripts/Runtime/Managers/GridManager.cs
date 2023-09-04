@@ -2,26 +2,26 @@ using BlastGame.Runtime.Models;
 using Core.Managers;
 using Core.Systems;
 using Core.Utilities;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using UnityEngine;
 
 namespace BlastGame.Runtime
 {
     public class GridManager : Singleton<GridManager>
     {
-        private const float X_OFFSET = -0.15f;
-        private const float Y_OFFSET = 1f;
-
         private Dictionary<Vector2, GridTile> _tiles;
         public Dictionary<Vector2, GridTile> Tiles => _tiles;
 
         public Transform GridRoot { get; private set; }
-
         public CustomEvent<int, int> OnGridInitialized = new();
 
         private GridData _gridData;
+
+        public readonly float GRID_OFFSET = -0.15f;
 
         private void OnEnable()
         {
@@ -35,10 +35,11 @@ namespace BlastGame.Runtime
 
         public void InitializeGrid()
         {
-            _tiles = new();
-            GridRoot = new GameObject(nameof(GridRoot)).transform;
-
             _gridData = LevelManager.Instance.CurrentLevel.LevelData.GridData;
+
+            _tiles = new();
+
+            CreateGridRoot();
 
             for (int x = 0; x < _gridData.Width; x++)
             {
@@ -50,7 +51,23 @@ namespace BlastGame.Runtime
                 }
             }
 
+
             OnGridInitialized.Invoke(_gridData.Width, _gridData.Height);
+        }
+
+        private void CreateGridRoot()
+        {
+            GridRoot = new GameObject(nameof(GridRoot)).transform;
+            GameObject GridVisualObject = new(nameof(GridVisualObject));
+            GridVisualObject.transform.SetParent(GridRoot);
+            GridVisualObject.transform.position = new Vector2((float)_gridData.Width / 2 - 0.5f + (((float)_gridData.Width / 2 - 0.5f) * GRID_OFFSET), (float)_gridData.Height / 2 - 0.5f + (((float)_gridData.Height / 2 - 0.5f) * GRID_OFFSET));
+            GridRoot.transform.position = new Vector3(10, GridRoot.transform.position.y);
+            SpriteRenderer spriteRenderer = GridVisualObject.AddComponent<SpriteRenderer>();
+            spriteRenderer.sortingOrder = -5;
+            spriteRenderer.drawMode = SpriteDrawMode.Sliced;
+            spriteRenderer.sprite = _gridData.GridSprite;
+            spriteRenderer.size = new(_gridData.Width + (_gridData.Width * GRID_OFFSET) + 0.55f, _gridData.Height + (_gridData.Height * GRID_OFFSET) + 0.60f);
+            GridRoot.transform.DOMove(Vector3.zero, 0.5f).SetEase(Ease.OutBack).SetDelay(0.5f);
         }
 
         public GridTile GetTileAtPosition(Vector2 position)

@@ -15,11 +15,11 @@ namespace BlastGame.Runtime
         public List<IItem> Items { get; private set; } = new();
         public CustomEvent<List<IItem>> OnItemsBlasted = new();
 
-        private const float SPAWN_OFFSET_Y = 1f;
-        private readonly Vector2[] ADJACENT_CHECK_POSITIONS = { Vector2.up , Vector2.down, Vector2.left, Vector2.right };
-
         private LevelData _levelData;
         private List<ItemData> _chosenItems = new();
+
+        private const float INITIAL_SPAWN_OFFSET_Y = 1f;
+        private readonly Vector2[] ADJACENT_CHECK_POSITIONS = { Vector2.up , Vector2.down, Vector2.left, Vector2.right };
 
         private void OnEnable()
         {
@@ -98,7 +98,7 @@ namespace BlastGame.Runtime
 
         private void CreateItem(GridTile tile, ItemData itemData)
         {
-            Vector2 spawnPosition = new(tile.GetGridPosition().x, GridManager.Instance.GetGridSize().y + SPAWN_OFFSET_Y);
+            Vector2 spawnPosition = new(tile.GetGridPositionWithOffset().x, GridManager.Instance.GetGridSize().y + INITIAL_SPAWN_OFFSET_Y);
             IItem item = Instantiate(itemData.ItemPrefab, spawnPosition, Quaternion.identity, GridManager.Instance.GridRoot);
             item.Initialize(itemData, tile);
         }
@@ -207,7 +207,7 @@ namespace BlastGame.Runtime
                 if (lowestTile == null)
                     continue;
 
-                tile.CurrentItem.Move(lowestTile.GetGridPosition());
+                tile.CurrentItem.Move(lowestTile);
             }
         }
 
@@ -281,7 +281,7 @@ namespace BlastGame.Runtime
             {
                 IItem item = Items[i];
                 item.UpdateGridTile(null);
-                item.Move(gridTiles[i].GetGridPosition());
+                item.Move(gridTiles[i]);
             }
 
             CheckItemGroups();

@@ -11,9 +11,6 @@ namespace BlastGame.Runtime
 {
     public class BlastableItem : ItemBase
     {
-        private SpriteRenderer _spriteRenderer;
-        public SpriteRenderer SpriteRenderer => _spriteRenderer == null ? _spriteRenderer = GetComponentInChildren<SpriteRenderer>() : _spriteRenderer;
-
         private void OnMouseDown()
         {
             CheckIfCanBlast();
@@ -38,11 +35,11 @@ namespace BlastGame.Runtime
             base.Initialize(itemData, gridTile);
         }
 
-        public override void Move(Vector2 targetPosition, Action onMovementCompleted = null)
+        public override void Move(GridTile targetGrid, Action onMovementCompleted = null)
         {
             DisableBlasting();
             onMovementCompleted += EnableBlasting;
-            base.Move(targetPosition, onMovementCompleted);
+            base.Move(targetGrid, onMovementCompleted);
             onMovementCompleted -= EnableBlasting;
         }
 

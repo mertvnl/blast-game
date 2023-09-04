@@ -27,7 +27,8 @@ namespace BlastGame.Runtime
         private void UpdateCameraPosition(int x, int y)
         {
             Camera.orthographicSize = Mathf.Clamp(new Vector2(x, y).magnitude, MIN_CAMERA_SIZE, MAX_CAMERA_SIZE);
-            transform.position = new Vector3((float)x / 2 - CAMERA_OFFSET, (float)y / 2 - CAMERA_OFFSET, transform.position.z);
+            Vector3 targetPosition = new((float)x / 2 - CAMERA_OFFSET + (((float)x / 2 - CAMERA_OFFSET) * GridManager.Instance.GRID_OFFSET), (float)y / 2 - CAMERA_OFFSET + (((float)y / 2 - CAMERA_OFFSET) * GridManager.Instance.GRID_OFFSET), transform.position.z);
+            transform.position = targetPosition;
         }
     }
 }
