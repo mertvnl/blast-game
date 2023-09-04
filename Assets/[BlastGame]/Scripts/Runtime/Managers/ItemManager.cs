@@ -3,7 +3,6 @@ using BlastGame.Runtime.Models;
 using Core.Managers;
 using Core.Systems;
 using Core.Utilities;
-using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -269,15 +268,20 @@ namespace BlastGame.Runtime
             }
         }
 
-        [Button]
         public void ShuffleItems()
         {
-            List<IItem> randomizedItems = new(Items);
-            randomizedItems.Shuffle();
+            List<GridTile> gridTiles = new();
 
+            foreach (IItem item in Items)
+                gridTiles.Add(item.CurrentGridTile);
+
+            gridTiles.Shuffle();
+            
             for (int i = 0; i < Items.Count; i++)
             {
-                Items[i].Move(randomizedItems[i].CurrentGridTile.GetGridPosition());
+                IItem item = Items[i];
+                item.UpdateGridTile(null);
+                item.Move(gridTiles[i].GetGridPosition());
             }
 
             CheckItemGroups();

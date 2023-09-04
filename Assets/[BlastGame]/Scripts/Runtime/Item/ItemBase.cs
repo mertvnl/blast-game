@@ -50,6 +50,12 @@ namespace BlastGame.Runtime
 
         public void UpdateGridTile(GridTile newTile)
         {
+            if (newTile == null)
+            {
+                CurrentGridTile = null;
+                return;
+            }
+
             if (CurrentGridTile != null)
                 CurrentGridTile.SetItem(null);
 
