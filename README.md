@@ -5,7 +5,8 @@ In this project I have used my own mobile game base project that I created. I us
 I decided to use seeds for level generation in order to have same level generation and randomness for every device. This also prevents generating totally random items for X level, so if player fails or restarts the level, they will play the same generation again.
 
 
-https://github.com/mertvnl/blast-game/assets/41839620/e51818dc-d223-46c0-b93f-7af1f2892598
+https://github.com/mertvnl/blast-game/assets/41839620/ff0289b4-651e-4552-8a4e-57690483c070
+
 
 
 
